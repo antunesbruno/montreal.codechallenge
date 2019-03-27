@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Xamarin.Forms" Version="3.2.0.839982" />
+    <PackageReference Include="Prism.Autofac.Forms" Version="7.1.0.431" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Montreal.Challenge.Core\Montreal.Challenge.Core.csproj" />
+    <ProjectReference Include="..\..\Montreal.Challenge.Datasource\Montreal.Challenge.Datasource.csproj" />
+    <ProjectReference Include="..\..\Montreal.Challenge.Ioc\Montreal.Challenge.Ioc.csproj" />
+    <ProjectReference Include="..\..\Montreal.Challenge.Shared\Montreal.Challenge.Shared.csproj" />
+  </ItemGroup>
+
+</Project>
