@@ -5,7 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="DTO\" />
     <Folder Include="Repository\Dao\" />
     <Folder Include="Repository\Entity\" />
   </ItemGroup>

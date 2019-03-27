@@ -1,0 +1,91 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Mtr:BaseView xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Montreal.Challenge.Views.NowPlayingPage"            
+             xmlns:Mtr="clr-namespace:Montreal.Challenge.Views.Base"
+             xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+             BackgroundColor="Black">
+    <ContentPage.Content>
+
+        <RelativeLayout>
+
+            <ListView x:Name="list"
+                RowHeight="200"
+                CachingStrategy="RetainElement"
+                RelativeLayout.XConstraint="{ConstraintExpression Type=Constant, Constant=0}"
+                RelativeLayout.YConstraint="{ConstraintExpression Type=Constant, Constant=0}"
+                RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=0}"
+                RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1, Constant=0}"
+                ItemsSource="{Binding MoviesNowList}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <RelativeLayout>
+
+                                <ActivityIndicator IsRunning="True"
+                                       RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=.5, Constant=-20}"
+                                       RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=.5, Constant=-20}"
+                                       />
+
+                                <ffimageloading:CachedImage 
+                                       Aspect="AspectFill"
+                                       RelativeLayout.XConstraint="{ConstraintExpression Type=Constant, Constant=0}"
+                                       RelativeLayout.YConstraint="{ConstraintExpression Type=Constant, Constant=0}"
+                                       RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=0}"
+                                       RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1, Constant=0}"
+                                       DownsampleToViewSize="false"
+                                       Source="{Binding BackdropPath}">
+                                </ffimageloading:CachedImage>
+
+                                <Label Text="{Binding Title}"
+                                       FontAttributes="Bold"
+                                       FontSize="Medium"
+                                       FontFamily="Roboto"
+                                       LineBreakMode="TailTruncation"
+                                       RelativeLayout.XConstraint="{ConstraintExpression Type=Constant, Constant=20}"
+                                       RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1, Constant=-50}"
+                                       RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=-40}"
+                                       TextColor="White"
+                                       />
+
+                                <Label Text="{Binding ReleaseDate}"
+                                       FontSize="Small"
+                                       FontFamily="Roboto"
+                                       RelativeLayout.XConstraint="{ConstraintExpression Type=Constant, Constant=20}"
+                                       RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1, Constant=-30}"
+                                       TextColor="White"
+                                       />
+
+                            </RelativeLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+            <BoxView x:Name="bgSearchBar" BackgroundColor="White" Opacity=".5" HeightRequest="50" IsVisible="{Binding IsBoxSearchBarVisible}"
+                     RelativeLayout.XConstraint="{ConstraintExpression Type=Constant, Constant=0}"
+                     RelativeLayout.YConstraint="{ConstraintExpression Type=Constant, Constant=0}"
+                     RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=0}"
+                     />
+
+            <SearchBar x:Name="searchBar" TextColor="#C62828" HeightRequest="50" IsVisible="{Binding IsSearchBarVisible}" Text="{Binding SearchText}"                     
+                       RelativeLayout.XConstraint="{ConstraintExpression Type=Constant, Constant=0}"
+                       RelativeLayout.YConstraint="{ConstraintExpression Type=Constant, Constant=0}"
+                       RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=0}">
+            </SearchBar>
+
+            <Image x:Name="search"
+                Source="search.png"
+                RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=-85}"
+                RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1, Constant=-85}"
+                RelativeLayout.WidthConstraint="{ConstraintExpression Type=Constant, Constant=65}"
+                RelativeLayout.HeightConstraint="{ConstraintExpression Type=Constant, Constant=65}" >
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding SearchBarCommand}"/>
+                </Image.GestureRecognizers>
+            </Image>
+
+        </RelativeLayout>
+
+    </ContentPage.Content>
+</Mtr:BaseView>

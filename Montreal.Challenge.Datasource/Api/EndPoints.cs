@@ -9,9 +9,10 @@ namespace Montreal.Challenge.Datasource.Api
     public static class Endpoints
     {
         //TheMovieDB - API
-        public static string BaseTheMovieDbUser => "FrankFahy";
-        public static string BaseTheMovieDbPass => "fRa$kf!hy";
-        public static string BaseTheMovieDbUrl => "http://109.169.66.175:8080/apiFrankFahy/clients/FrankFahy";
+        //https://api.themoviedb.org/3/movie/550?api_key=f2dc3e1e5744cb77b6c069d191016e25
+        public static string BaseTheMovieDbApiKey => "f2dc3e1e5744cb77b6c069d191016e25";
+
+        public static string BaseTheMovieDbUrl => "https://api.themoviedb.org/3";
 
         //general endpoints
         public const string CUSTOMERS = "/customers";
@@ -30,14 +31,10 @@ namespace Montreal.Challenge.Datasource.Api
         public const string USER_LIST = "/users";
 
 
-        public static HttpClient BaseEirpointHttpClient(string milestoneEndPoint = null, KeyValuePair<string, string> requestHeader = new KeyValuePair<string, string>())
+        public static HttpClient BaseEirpointHttpClient()
         {
-            var authData = string.Format("{0}:{1}", BaseTheMovieDbUser, BaseTheMovieDbPass);
-            var authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes(authData));
-
             var _httpClient = new HttpClient();
-            _httpClient.BaseAddress = string.IsNullOrEmpty(milestoneEndPoint) ? new Uri(BaseTheMovieDbUrl) : new Uri(BaseTheMovieDbUrl + milestoneEndPoint);
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
+            _httpClient.BaseAddress = new Uri(BaseTheMovieDbUrl + "?api_key=" + BaseTheMovieDbApiKey);
             _httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
             _httpClient.Timeout = TimeSpan.FromSeconds(15);
 
