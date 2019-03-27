@@ -5,8 +5,8 @@ using Prism;
 using Prism.Ioc;
 
 namespace Montreal.Challenge.Droid
-{
-    [Activity(Label = "Montreal.Challenge", Icon = "@mipmap/ic_launcher", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
+{    
+    [Activity(Label = "Montreal.Challenge", Icon = "@mipmap/ic_launcher", Theme = "@style/MainTheme", MainLauncher = false, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
         protected override void OnCreate(Bundle bundle)

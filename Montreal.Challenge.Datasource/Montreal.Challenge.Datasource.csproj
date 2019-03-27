@@ -5,11 +5,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Api\" />
-    <Folder Include="Interfaces\" />
-    <Folder Include="Helpers\" />
     <Folder Include="DTO\" />
-    <Folder Include="Repository\" />
+    <Folder Include="Repository\Dao\" />
+    <Folder Include="Repository\Entity\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Refit" Version="4.6.99" />
+    <PackageReference Include="sqlite-net-pcl" Version="1.5.231" />
   </ItemGroup>
 
 </Project>
