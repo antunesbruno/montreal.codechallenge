@@ -212,7 +212,7 @@ namespace Montreal.Challenge.ViewModels
                 return;
 
             //execute search
-            if (!string.IsNullOrEmpty(SearchText) && SearchText.Length >= 5)
+            if (!string.IsNullOrEmpty(SearchText) && SearchText.Length >= 3)
             {
                 using (var searching = UserDialogs.Instance.Loading("Searching...", null, null, true, MaskType.Gradient))
                 {
