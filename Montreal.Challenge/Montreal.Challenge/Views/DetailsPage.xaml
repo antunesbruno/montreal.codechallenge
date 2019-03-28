@@ -8,66 +8,70 @@
              prism:ViewModelLocator.AutowireViewModel="True"
              BackgroundColor="Black">
     <ContentPage.Content>
-        <RelativeLayout>
-          
+
+        <AbsoluteLayout>
             <ffimageloading:CachedImage 
                 Aspect="AspectFill"
-                Opacity=".2"
-                RelativeLayout.XConstraint="{ConstraintExpression Type=Constant, Constant=0}"
-                RelativeLayout.YConstraint="{ConstraintExpression Type=Constant, Constant=0}"
-                RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=0}"
-                RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1, Constant=0}"
+                Opacity=".5"
+                AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1" 
                 DownsampleToViewSize="false"
                 Source="{Binding MovieDetailItem.Movie.PosterPath}">
             </ffimageloading:CachedImage>
 
-            <Label
-                x:Name="overView"
-                FontSize="Medium"
-                RelativeLayout.XConstraint="{ConstraintExpression Type=Constant, Constant=20}"
-                RelativeLayout.YConstraint="{ConstraintExpression Type=Constant, Constant=20}"
-                RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=-40}"
-                TextColor="White"
-                Text="{Binding MovieDetailItem.Movie.OverView}"
-                />
+            <Grid AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1" BackgroundColor="Transparent" VerticalOptions="FillAndExpand" RowSpacing="5" ColumnSpacing="5" >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="65"  />
+                    <RowDefinition Height="50" />
+                    <RowDefinition Height="50" />
+                    <RowDefinition Height="50" />
+                    <RowDefinition Height="300" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="35" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
 
-            <Label
-                x:Name="title"
-                FontAttributes="Bold"
-                FontSize="Large"
-                FontFamily="Roboto"
-                LineBreakMode="WordWrap"
-                VerticalTextAlignment="End"
-                RelativeLayout.XConstraint="{ConstraintExpression Type=Constant, Constant=20}"
-                RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1, Constant=-150}"
-                RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=-40}"
-                RelativeLayout.HeightConstraint="{ConstraintExpression Type=Constant, Constant=60}"
-                TextColor="White"
-                Text="{Binding MovieDetailItem.Movie.Title}"
-                />
+                <BoxView x:Name="bgtitle" BackgroundColor="White" Opacity=".5" HeightRequest="50" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"/>
+                <Image x:Name="titleIcon" Source="title.png" Grid.Row="0" Grid.Column="0" WidthRequest="35" HeightRequest="35" HorizontalOptions="Fill" VerticalOptions="Center"/>
+                <Label x:Name="title" FontAttributes="Bold" FontSize="Large" FontFamily="Roboto" LineBreakMode="WordWrap"  HorizontalOptions="Fill" VerticalOptions="Center" 
+                       Grid.Row="0" Grid.Column="1"
+                       TextColor="White" 
+                       Text="{Binding MovieDetailItem.Movie.Title}"/>
 
-            <Label
-                x:Name="genres"
-                FontSize="Medium"
-                FontFamily="Roboto"
-                RelativeLayout.XConstraint="{ConstraintExpression Type=Constant, Constant=20}"
-                RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1, Constant=-70}"
-                RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=-40}"
-                TextColor="White"
-                Text="{Binding MovieDetailItem.Movie.GenreIds}"
-                />
+                <Image x:Name="vote" Source="votes.png" Grid.Row="1" Grid.Column="0" WidthRequest="35" HeightRequest="35" HorizontalOptions="Fill" VerticalOptions="Center"/>
+                <Label Grid.Row="1" Grid.Column="1"  HorizontalOptions="Fill" VerticalOptions="Center"
+                    x:Name="voteCount"
+                    FontSize="Default"
+                    FontFamily="Roboto"
+                    TextColor="White"
+                    Text="{Binding MovieDetailItem.Movie.Vote}"/>
 
-            <Label
-                x:Name="releaseDate"
-                FontSize="Medium"
-                FontFamily="Roboto"
-                RelativeLayout.XConstraint="{ConstraintExpression Type=Constant, Constant=20}"
-                RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1, Constant=-30}"
-                RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=-40}"
-                TextColor="White"
-                Text="{Binding MovieDetailItem.ReleaseDate}"
-                />
+                <Image x:Name="average" Source="average.png" Grid.Row="2" Grid.Column="0" WidthRequest="35" HeightRequest="35" HorizontalOptions="Fill" VerticalOptions="Center"/>
+                <Label  Grid.Row="2" Grid.Column="1" HorizontalOptions="Fill" VerticalOptions="Center"
+                        x:Name="voteAverage"
+                        FontSize="Default"
+                        FontFamily="Roboto"
+                        TextColor="White"
+                        Text="{Binding MovieDetailItem.Movie.Average}"/>
 
-        </RelativeLayout>
+                <Image x:Name="releasedate" Source="release.png" Grid.Row="3" Grid.Column="0" WidthRequest="35" HeightRequest="35" HorizontalOptions="Fill" VerticalOptions="Center"/>
+                <Label  Grid.Row="3" Grid.Column="1" HorizontalOptions="Fill" VerticalOptions="Center"
+                        x:Name="releaseDate"
+                        FontSize="Default"
+                        FontFamily="Roboto"
+                        TextColor="White"
+                        Text="{Binding MovieDetailItem.ReleaseDate}"/>
+
+                <Label Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" VerticalTextAlignment="Center" HorizontalOptions="Fill" VerticalOptions="Center"
+                        x:Name="overView"
+                        FontSize="Default"                
+                        TextColor="White"
+                        LineBreakMode="WordWrap"     
+                        FontFamily="Roboto"
+                        Text="{Binding MovieDetailItem.Movie.OverView}"/>
+
+            </Grid>
+        </AbsoluteLayout>
+
     </ContentPage.Content>
 </Mtr:BaseView>

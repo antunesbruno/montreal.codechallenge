@@ -6,6 +6,7 @@
              xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
              prism:ViewModelLocator.AutowireViewModel="True"
+             xmlns:beh="clr-namespace:Montreal.Challenge.Behaviors"
              BackgroundColor="Black">
     <ContentPage.Content>
 
@@ -20,6 +21,9 @@
                 RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1, Constant=0}"
                 ItemsSource="{Binding MoviesNowList}"
                 SelectedItem="{Binding SelectedItem}">
+                <ListView.Behaviors>
+                    <beh:ListViewInfiniteScrollBehavior LoadMoreCommand="{Binding LoadMoreCommand}" />
+                </ListView.Behaviors>
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>

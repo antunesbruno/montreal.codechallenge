@@ -23,6 +23,8 @@ namespace Montreal.Challenge.ViewModels
         MovieItem _selectedItem;
         MovieItem _itemSelectedList;        
         INavigationService _navigationService;
+        int _currentPage = 1;
+        int _totalPages = 0;
         #endregion
 
         #region Properties       
@@ -113,6 +115,8 @@ namespace Montreal.Challenge.ViewModels
 
         public DelegateCommand ImageSearchBarCommand { get; set; }
         public DelegateCommand SearchBarCommand { get; set; }
+        public DelegateCommand LoadMoreCommand { get; set; }
+        
         #endregion
 
         #region Methods
@@ -149,14 +153,20 @@ namespace Montreal.Challenge.ViewModels
                 //request api
                 var moviesApiCore = Injector.Resolver<IMoviesApiCore>();
 
+                //set page
+                _currentPage = 1;
+
                 //perfomr request
-                var moviesList = await moviesApiCore.GetNowPlayingMovies("pt-br", 1);
+                var moviesListDTO = await moviesApiCore.GetNowPlayingMovies("pt-br", _currentPage);
 
                 //add in observable list
-                if (moviesList?.Count > 0)
+                if (moviesListDTO != null && moviesListDTO.Results?.Count > 0)
                 {
+                    //set page property
+                    _totalPages = moviesListDTO.TotalPages;
+
                     //append items
-                    AppendMovieItems(moviesList);
+                    AppendMovieItems(moviesListDTO.Results);
                 }
             }           
         }
@@ -173,6 +183,7 @@ namespace Montreal.Challenge.ViewModels
         {
             ImageSearchBarCommand = new DelegateCommand(ExecuteImageSearchBar);
             SearchBarCommand = new DelegateCommand(ExecuteSearchBar);
+            LoadMoreCommand = new DelegateCommand(ExecuteLoadMoreItems);
         }
 
         private void ExecuteImageSearchBar()
@@ -213,6 +224,34 @@ namespace Montreal.Challenge.ViewModels
                 {
                     //show message
                     UserDialogs.Instance.Alert("O termo informado deve ter 5 caracteres ou mais !", "Pesquisa");
+                }
+            }
+        }
+
+        private async void ExecuteLoadMoreItems()
+        {
+            if (_currentPage <= _totalPages)
+            {
+                using (var searching = UserDialogs.Instance.Loading("Loading More Items...", null, null, true, MaskType.Gradient))
+                {
+                    //request api
+                    var moviesApiCore = Injector.Resolver<IMoviesApiCore>();
+
+                    //set page
+                    _currentPage++;
+
+                    //perfomr request
+                    var moviesListDTO = await moviesApiCore.GetNowPlayingMovies("pt-br", _currentPage);
+
+                    //add in observable list
+                    if (moviesListDTO != null && moviesListDTO.Results?.Count > 0)
+                    {
+                        //set page property
+                        _totalPages = moviesListDTO.TotalPages;
+
+                        //append items
+                        AppendMovieItems(moviesListDTO.Results);
+                    }
                 }
             }
         }

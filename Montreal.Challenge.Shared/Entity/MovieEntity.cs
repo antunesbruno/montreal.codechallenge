@@ -26,5 +26,11 @@ namespace Montreal.Challenge.Shared.Entity
         [JsonProperty("release_date")]
         public DateTime? ReleaseDate { get; set; }
 
+        [JsonProperty("vote_count")]
+        public int Vote { get; set; }
+
+        [JsonProperty("vote_average")]
+        public double Average { get; set; }
+
     }
 }

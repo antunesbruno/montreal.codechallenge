@@ -12,7 +12,7 @@ namespace Montreal.Challenge.Core.Api
 {
     public class MoviesApiCore : BaseApiCore, IMoviesApiCore
     {
-        public async Task<List<MovieEntity>> GetNowPlayingMovies(string language, int page)
+        public async Task<ResultDTO<MovieEntity>> GetNowPlayingMovies(string language, int page)
         {
             var moviesNowPlayingAPI = RestService.For<IMoviesApi>(Endpoints.BaseEirpointHttpClient());
             var moviesNowPlayingResponse = await moviesNowPlayingAPI.GetNowPlayingMovies(Endpoints.BaseTheMovieDbApiKey, language, page);
@@ -25,10 +25,10 @@ namespace Montreal.Challenge.Core.Api
                 //update paths
                 UpdateRelativePaths(json.Results);
 
-                return json.Results;
+                return json;
             }
 
-            return new List<MovieEntity>();
+            return new ResultDTO<MovieEntity>();
         }
 
         public async Task<List<MovieEntity>> GetSearchedMovies(string textSearch, string language, int page)
