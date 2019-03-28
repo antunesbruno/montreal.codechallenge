@@ -3,6 +3,7 @@ using Montreal.Challenge.Core.Interfaces;
 using Montreal.Challenge.Ioc;
 using Montreal.Challenge.Items;
 using Montreal.Challenge.Shared.Entity;
+using Montreal.Challenge.Shared.NativeInterfaces;
 using Prism.Commands;
 using Prism.Navigation;
 using System.Collections.Generic;
@@ -148,27 +149,34 @@ namespace Montreal.Challenge.ViewModels
 
         private async void LoadNowPlayingMovies()
         {
-            using (var loading = UserDialogs.Instance.Loading("Loading...", null, null, true, MaskType.Gradient))
+            //verify intenet connection
+            if (!IsConnected())
+                return;
+
+            if (Injector.Resolver<IConnectivity>().IsConnected())
             {
-                //request api
-                var moviesApiCore = Injector.Resolver<IMoviesApiCore>();
-
-                //set page
-                _currentPage = 1;
-
-                //perfomr request
-                var moviesListDTO = await moviesApiCore.GetNowPlayingMovies("pt-br", _currentPage);
-
-                //add in observable list
-                if (moviesListDTO != null && moviesListDTO.Results?.Count > 0)
+                using (var loading = UserDialogs.Instance.Loading("Loading...", null, null, true, MaskType.Gradient))
                 {
-                    //set page property
-                    _totalPages = moviesListDTO.TotalPages;
+                    //request api
+                    var moviesApiCore = Injector.Resolver<IMoviesApiCore>();
 
-                    //append items
-                    AppendMovieItems(moviesListDTO.Results);
+                    //set page
+                    _currentPage = 1;
+
+                    //perfomr request
+                    var moviesListDTO = await moviesApiCore.GetNowPlayingMovies("pt-br", _currentPage);
+
+                    //add in observable list
+                    if (moviesListDTO != null && moviesListDTO.Results?.Count > 0)
+                    {
+                        //set page property
+                        _totalPages = moviesListDTO.TotalPages;
+
+                        //append items
+                        AppendMovieItems(moviesListDTO.Results);
+                    }
                 }
-            }           
+            }
         }
 
         private void AppendMovieItems(List<MovieEntity> movies)
@@ -197,6 +205,10 @@ namespace Montreal.Challenge.ViewModels
 
         private async void ExecuteSearchBar()
         {
+            //verify internet connection
+            if (!IsConnected())
+                return;
+
             using (var searching = UserDialogs.Instance.Loading("Searching...", null, null, true, MaskType.Gradient))
             {
                 if (!string.IsNullOrEmpty(SearchText) && SearchText.Length >= 5)
@@ -204,8 +216,11 @@ namespace Montreal.Challenge.ViewModels
                     //request api
                     var moviesApiCore = Injector.Resolver<IMoviesApiCore>();
 
+                    //set page
+                    _currentPage = 1;
+
                     //perfomr request
-                    var moviesList = await moviesApiCore.GetSearchedMovies(SearchText, "pt-br", 1);
+                    var moviesList = await moviesApiCore.GetSearchedMovies(SearchText, "pt-br", _currentPage);
 
                     //add in observable list
                     if (moviesList?.Count > 0)
@@ -230,7 +245,11 @@ namespace Montreal.Challenge.ViewModels
 
         private async void ExecuteLoadMoreItems()
         {
-            if (_currentPage <= _totalPages)
+            //verify intenet connection
+            if (!IsConnected())
+                return;
+
+            if (_currentPage <= _totalPages && !_isSearchBarVisible)
             {
                 using (var searching = UserDialogs.Instance.Loading("Loading More Items...", null, null, true, MaskType.Gradient))
                 {
@@ -261,7 +280,6 @@ namespace Montreal.Challenge.ViewModels
             _listmovies.Clear();
             MoviesNowList.Clear();
         }
-
 
         #endregion
     }

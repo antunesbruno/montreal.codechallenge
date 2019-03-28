@@ -19,23 +19,10 @@ namespace Montreal.Challenge.Datasource.Helpers
 
         public void CreateTables()
         {
-            //PlatformDatabase.CreateTable<CustomersEntity>();
-            //PlatformDatabase.CreateTable<DepartmentEntity>();
-            //PlatformDatabase.CreateTable<DiscountsEntity>();
-            //PlatformDatabase.CreateTable<PaymentsCategoriesEntity>();
-            //PlatformDatabase.CreateTable<GroupsEntity>();
-            //PlatformDatabase.CreateTable<PosStationsEntity>();
-            //PlatformDatabase.CreateTable<ProductsEntity>();
-            //PlatformDatabase.CreateTable<ProductBarCodesEntity>();
-            //PlatformDatabase.CreateTable<PromotionsEntity>();
-            //PlatformDatabase.CreateTable<ReasonsEntity>();
-            //PlatformDatabase.CreateTable<ReceiptTemplatesEntity>();
-            //PlatformDatabase.CreateTable<StockingAttributeTypeEntity>();
-            //PlatformDatabase.CreateTable<StockLocationsEntity>();
-            //PlatformDatabase.CreateTable<UsersEntity>();
-            //PlatformDatabase.CreateTable<BarcodesEntity>();
-            //PlatformDatabase.CreateTable<RangeHeaderLogEntity>();
-            //PlatformDatabase.CreateTable<ConfigurationEntity>();
+            //If has need to use database, configure the tables that need to be created here
+            //following the exemple, where XXX is the entity
+
+            //PlatformDatabase.CreateTable<XXX>();
         }
     }
 }
