@@ -34,5 +34,8 @@ Is a library to show alerts, toasts, progress bar seeking a better user experien
 ### Plugin Permissions
 Manage permissions of the mobile phone resources for the user
 
+### Prism MVVM
+Manage MVVM features for Xamarin Forms
+
 ### Compiling
 A direct build targeting a developer enabled Android device should do the trick, it's expected that the nuget packages to be restored automatically during the build.
