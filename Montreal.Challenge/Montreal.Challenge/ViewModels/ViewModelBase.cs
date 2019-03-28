@@ -1,4 +1,7 @@
-﻿using Prism.Commands;
+﻿using Acr.UserDialogs;
+using Montreal.Challenge.Ioc;
+using Montreal.Challenge.Shared.NativeInterfaces;
+using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Navigation;
 using System;
@@ -43,6 +46,23 @@ namespace Montreal.Challenge.ViewModels
         public virtual void Destroy()
         {
 
+        }
+
+        /// <summary>
+        /// Verify if has internet connection
+        /// </summary>
+        /// <returns></returns>
+        public bool IsConnected()
+        {
+            var connected = Injector.Resolver<IConnectivity>().IsConnected();
+
+            if(!connected)
+            {
+                //show message
+                UserDialogs.Instance.Alert("Ocorreu um erro de conexão com Internet ! Tente novamente mais tarde !", "Internet");
+            }
+
+            return connected;
         }
     }
 }

@@ -3,6 +3,7 @@ using Montreal.Challenge.Core.Interfaces;
 using Montreal.Challenge.Ioc;
 using Montreal.Challenge.Items;
 using Montreal.Challenge.Shared.Entity;
+using Montreal.Challenge.Shared.NativeInterfaces;
 using Prism.Commands;
 using Prism.Navigation;
 using System.Collections.Generic;
@@ -116,7 +117,8 @@ namespace Montreal.Challenge.ViewModels
         public DelegateCommand ImageSearchBarCommand { get; set; }
         public DelegateCommand SearchBarCommand { get; set; }
         public DelegateCommand LoadMoreCommand { get; set; }
-        
+        public DelegateCommand UnfocusedCommand { get; set; }        
+
         #endregion
 
         #region Methods
@@ -128,7 +130,7 @@ namespace Montreal.Challenge.ViewModels
             if (propertyName.Equals(nameof(SelectedItem)))
             {
                 OnSelectedItem();
-            }
+            }       
         }
 
         private void OnSelectedItem()
@@ -148,27 +150,34 @@ namespace Montreal.Challenge.ViewModels
 
         private async void LoadNowPlayingMovies()
         {
-            using (var loading = UserDialogs.Instance.Loading("Loading...", null, null, true, MaskType.Gradient))
+            //verify intenet connection
+            if (!IsConnected())
+                return;
+
+            if (Injector.Resolver<IConnectivity>().IsConnected())
             {
-                //request api
-                var moviesApiCore = Injector.Resolver<IMoviesApiCore>();
-
-                //set page
-                _currentPage = 1;
-
-                //perfomr request
-                var moviesListDTO = await moviesApiCore.GetNowPlayingMovies("pt-br", _currentPage);
-
-                //add in observable list
-                if (moviesListDTO != null && moviesListDTO.Results?.Count > 0)
+                using (var loading = UserDialogs.Instance.Loading("Loading...", null, null, true, MaskType.Gradient))
                 {
-                    //set page property
-                    _totalPages = moviesListDTO.TotalPages;
+                    //request api
+                    var moviesApiCore = Injector.Resolver<IMoviesApiCore>();
 
-                    //append items
-                    AppendMovieItems(moviesListDTO.Results);
+                    //set page
+                    _currentPage = 1;
+
+                    //perfomr request
+                    var moviesListDTO = await moviesApiCore.GetNowPlayingMovies("pt-br", _currentPage);
+
+                    //add in observable list
+                    if (moviesListDTO != null && moviesListDTO.Results?.Count > 0)
+                    {
+                        //set page property
+                        _totalPages = moviesListDTO.TotalPages;
+
+                        //append items
+                        AppendMovieItems(moviesListDTO.Results);
+                    }
                 }
-            }           
+            }
         }
 
         private void AppendMovieItems(List<MovieEntity> movies)
@@ -184,9 +193,10 @@ namespace Montreal.Challenge.ViewModels
             ImageSearchBarCommand = new DelegateCommand(ExecuteImageSearchBar);
             SearchBarCommand = new DelegateCommand(ExecuteSearchBar);
             LoadMoreCommand = new DelegateCommand(ExecuteLoadMoreItems);
+            UnfocusedCommand = new DelegateCommand(ExecuteUnfocus);
         }
 
-        private void ExecuteImageSearchBar()
+        private async void ExecuteImageSearchBar()
         {
             //show search bar
             IsBoxSearchBarVisible = IsSearchBarVisible = !IsSearchBarVisible;
@@ -197,15 +207,23 @@ namespace Montreal.Challenge.ViewModels
 
         private async void ExecuteSearchBar()
         {
-            using (var searching = UserDialogs.Instance.Loading("Searching...", null, null, true, MaskType.Gradient))
+            //verify internet connection
+            if (!IsConnected())
+                return;
+
+            //execute search
+            if (!string.IsNullOrEmpty(SearchText) && SearchText.Length >= 5)
             {
-                if (!string.IsNullOrEmpty(SearchText) && SearchText.Length >= 5)
+                using (var searching = UserDialogs.Instance.Loading("Searching...", null, null, true, MaskType.Gradient))
                 {
                     //request api
                     var moviesApiCore = Injector.Resolver<IMoviesApiCore>();
 
+                    //set page
+                    _currentPage = 1;
+
                     //perfomr request
-                    var moviesList = await moviesApiCore.GetSearchedMovies(SearchText, "pt-br", 1);
+                    var moviesList = await moviesApiCore.GetSearchedMovies(SearchText, "pt-br", _currentPage);
 
                     //add in observable list
                     if (moviesList?.Count > 0)
@@ -215,22 +233,18 @@ namespace Montreal.Challenge.ViewModels
 
                         //append items
                         AppendMovieItems(moviesList);
-                    }
-
-                    //hide and clear search
-                    ExecuteImageSearchBar();
-                }
-                else
-                {
-                    //show message
-                    UserDialogs.Instance.Alert("O termo informado deve ter 5 caracteres ou mais !", "Pesquisa");
+                    }                
                 }
             }
         }
 
         private async void ExecuteLoadMoreItems()
         {
-            if (_currentPage <= _totalPages)
+            //verify intenet connection
+            if (!IsConnected())
+                return;
+
+            if (_currentPage <= _totalPages && !_isSearchBarVisible)
             {
                 using (var searching = UserDialogs.Instance.Loading("Loading More Items...", null, null, true, MaskType.Gradient))
                 {
@@ -256,12 +270,20 @@ namespace Montreal.Challenge.ViewModels
             }
         }
 
+        private void ExecuteUnfocus()
+        {
+            //show search bar
+            IsBoxSearchBarVisible = IsSearchBarVisible = false;
+
+            //reset search
+            SearchText = string.Empty;
+        }
+
         private void ClearLists()
         {
             _listmovies.Clear();
             MoviesNowList.Clear();
         }
-
 
         #endregion
     }

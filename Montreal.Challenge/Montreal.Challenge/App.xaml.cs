@@ -16,12 +16,7 @@ using Montreal.Challenge.Core.Interfaces;
 namespace Montreal.Challenge
 {
     public partial class App
-    {
-        /* 
-         * The Xamarin Forms XAML Previewer in Visual Studio uses System.Activator.CreateInstance.
-         * This imposes a limitation in which the App class must have a default constructor. 
-         * App(IPlatformInitializer initializer = null) cannot be handled by the Activator.
-         */
+    {     
         public App() : this(null) { }
 
         public App(IPlatformInitializer initializer) : base(initializer) { }
@@ -56,7 +51,6 @@ namespace Montreal.Challenge
         private void RegisterNavigations(IContainerRegistry containerRegistry)
         {
             containerRegistry.RegisterForNavigation<NavigationPage>();
-            containerRegistry.RegisterForNavigation<MainPage, MainPageViewModel>();
             containerRegistry.RegisterForNavigation<NowPlayingPage, NowPlayingPageViewModel>();
             containerRegistry.RegisterForNavigation<DetailsPage, DetailsPageViewModel>();
         }
@@ -70,16 +64,11 @@ namespace Montreal.Challenge
             Injector.RegisterType<DatabaseHelper, IDatabaseHelper>();
           
             //core api
-            Injector.RegisterType<MoviesApiCore, IMoviesApiCore>();
-            
-            //core bll
-            //Injector.RegisterType<ProductsBll, IProductsBll>();
-            //Injector.RegisterType<BarcodesBll, IBarcodesBll>();
+            Injector.RegisterType<MoviesApiCore, IMoviesApiCore>();                    
 
             //native interfaces
-            //Injector.RegisterType<NativeConnectivity, IConnectivity>();
-            //Injector.RegisterType<MonitorService, IMonitorService>();
-            //Injector.RegisterType<ConfigurationApp, IConfiguration>();
+            Injector.RegisterType<NativeConnectivity, IConnectivity>();
+            
         }
     }
 }

@@ -13,7 +13,7 @@ using Android.Widget;
 
 namespace Montreal.Challenge.Droid
 {
-    [Activity(Label = "Montreal.CodeChallenge", Icon = "@mipmap/ic_launcher", Theme = "@style/MontrealTheme.Splash", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
+    [Activity(Label = "Montreal Code Challenge", Icon = "@mipmap/ic_launcher", Theme = "@style/MontrealTheme.Splash", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation, ScreenOrientation = ScreenOrientation.Portrait)]
     public class SplashActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
         public override void OnCreate(Bundle savedInstanceState, PersistableBundle persistentState)
