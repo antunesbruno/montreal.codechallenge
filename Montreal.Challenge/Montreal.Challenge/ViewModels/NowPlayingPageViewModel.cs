@@ -117,7 +117,8 @@ namespace Montreal.Challenge.ViewModels
         public DelegateCommand ImageSearchBarCommand { get; set; }
         public DelegateCommand SearchBarCommand { get; set; }
         public DelegateCommand LoadMoreCommand { get; set; }
-        
+        public DelegateCommand UnfocusedCommand { get; set; }        
+
         #endregion
 
         #region Methods
@@ -129,7 +130,7 @@ namespace Montreal.Challenge.ViewModels
             if (propertyName.Equals(nameof(SelectedItem)))
             {
                 OnSelectedItem();
-            }
+            }       
         }
 
         private void OnSelectedItem()
@@ -192,9 +193,10 @@ namespace Montreal.Challenge.ViewModels
             ImageSearchBarCommand = new DelegateCommand(ExecuteImageSearchBar);
             SearchBarCommand = new DelegateCommand(ExecuteSearchBar);
             LoadMoreCommand = new DelegateCommand(ExecuteLoadMoreItems);
+            UnfocusedCommand = new DelegateCommand(ExecuteUnfocus);
         }
 
-        private void ExecuteImageSearchBar()
+        private async void ExecuteImageSearchBar()
         {
             //show search bar
             IsBoxSearchBarVisible = IsSearchBarVisible = !IsSearchBarVisible;
@@ -209,9 +211,10 @@ namespace Montreal.Challenge.ViewModels
             if (!IsConnected())
                 return;
 
-            using (var searching = UserDialogs.Instance.Loading("Searching...", null, null, true, MaskType.Gradient))
+            //execute search
+            if (!string.IsNullOrEmpty(SearchText) && SearchText.Length >= 5)
             {
-                if (!string.IsNullOrEmpty(SearchText) && SearchText.Length >= 5)
+                using (var searching = UserDialogs.Instance.Loading("Searching...", null, null, true, MaskType.Gradient))
                 {
                     //request api
                     var moviesApiCore = Injector.Resolver<IMoviesApiCore>();
@@ -230,15 +233,7 @@ namespace Montreal.Challenge.ViewModels
 
                         //append items
                         AppendMovieItems(moviesList);
-                    }
-
-                    //hide and clear search
-                    ExecuteImageSearchBar();
-                }
-                else
-                {
-                    //show message
-                    UserDialogs.Instance.Alert("O termo informado deve ter 5 caracteres ou mais !", "Pesquisa");
+                    }                
                 }
             }
         }
@@ -273,6 +268,15 @@ namespace Montreal.Challenge.ViewModels
                     }
                 }
             }
+        }
+
+        private void ExecuteUnfocus()
+        {
+            //show search bar
+            IsBoxSearchBarVisible = IsSearchBarVisible = false;
+
+            //reset search
+            SearchText = string.Empty;
         }
 
         private void ClearLists()

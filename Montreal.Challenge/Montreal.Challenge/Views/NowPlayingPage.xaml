@@ -69,7 +69,7 @@
                 </ListView.ItemTemplate>
             </ListView>
 
-            <BoxView x:Name="bgSearchBar" BackgroundColor="White" Opacity=".5" HeightRequest="50" IsVisible="{Binding IsBoxSearchBarVisible}"
+            <BoxView x:Name="bgSearchBar" BackgroundColor="White" Opacity=".5" HeightRequest="50" IsVisible="{Binding IsSearchBarVisible}"
                      RelativeLayout.XConstraint="{ConstraintExpression Type=Constant, Constant=0}"
                      RelativeLayout.YConstraint="{ConstraintExpression Type=Constant, Constant=0}"
                      RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=0}"
@@ -81,7 +81,9 @@
                        RelativeLayout.XConstraint="{ConstraintExpression Type=Constant, Constant=0}"
                        RelativeLayout.YConstraint="{ConstraintExpression Type=Constant, Constant=0}"
                        RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=0}">
-              
+                <SearchBar.Behaviors>
+                    <beh:TextChangedBehavior UnFocusedCommand="{Binding UnfocusedCommand}"/>
+                </SearchBar.Behaviors>              
             </SearchBar>
 
             <Image x:Name="search"
