@@ -6,7 +6,7 @@ namespace Montreal.Challenge.Datasource.Interfaces
 {
     public interface IDatabaseHelper
     {
-        void CreateDatabase(string absolutePath);
+        void CreateDatabase();
         void CreateTables();
     }
 }

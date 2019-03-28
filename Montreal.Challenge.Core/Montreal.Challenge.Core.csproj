@@ -5,9 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Api\" />
     <Folder Include="Bll\" />
-    <Folder Include="Interfaces\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Montreal.Challenge.Datasource\Montreal.Challenge.Datasource.csproj" />
+    <ProjectReference Include="..\Montreal.Challenge.Shared\Montreal.Challenge.Shared.csproj" />
   </ItemGroup>
 
 </Project>

@@ -11,10 +11,10 @@ namespace Montreal.Challenge.Datasource.Helpers
         private readonly string DATABASE_FOLDER = "montreal";
         private readonly string DATABASE_NAME = "montreal-codechallenge.db3";
 
-        public void CreateDatabase(string absolutePath)
+        public void CreateDatabase()
         {
             //create database
-            PlatformDatabase.CreateDatabase(absolutePath, DATABASE_FOLDER, DATABASE_NAME);
+            PlatformDatabase.CreateDatabase(DATABASE_FOLDER, DATABASE_NAME);
         }
 
         public void CreateTables()

@@ -1,10 +1,13 @@
-﻿using Montreal.Challenge.Datasource.Entity;
+﻿using Acr.UserDialogs;
+using Montreal.Challenge.Core.Interfaces;
+using Montreal.Challenge.Ioc;
+using Montreal.Challenge.Items;
+using Montreal.Challenge.Shared.Entity;
 using Prism.Commands;
 using Prism.Navigation;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
+using System.Runtime.CompilerServices;
 
 namespace Montreal.Challenge.ViewModels
 {
@@ -12,16 +15,19 @@ namespace Montreal.Challenge.ViewModels
     {
         #region Fields        
 
-        ObservableCollection<Movie> _moviesNowList;
-        bool _isBoxSearchBarVisible = true;
-        bool _isSearchBarVisible = true;
+        ObservableCollection<MovieItem> _moviesNowList;
+        bool _isBoxSearchBarVisible = false;
+        bool _isSearchBarVisible = false;
         string _searchText = string.Empty;
-
+        List<MovieItem> _listmovies = new List<MovieItem>();
+        MovieItem _selectedItem;
+        MovieItem _itemSelectedList;        
+        INavigationService _navigationService;
         #endregion
 
         #region Properties       
 
-        public ObservableCollection<Movie> MoviesNowList
+        public ObservableCollection<MovieItem> MoviesNowList
         {
             get { return _moviesNowList; }
             set
@@ -30,6 +36,26 @@ namespace Montreal.Challenge.ViewModels
                 RaisePropertyChanged("MoviesNowList");
             }
         }
+
+        public MovieItem SelectedItem
+        {
+            get { return _selectedItem; }
+            set
+            {
+                _selectedItem = value;
+                RaisePropertyChanged("SelectedItem");
+            }
+        }
+
+        public MovieItem ItemSelectedList
+        {
+            get { return _itemSelectedList; }
+            set
+            {
+                _itemSelectedList = value;
+                RaisePropertyChanged("ItemSelectedList");
+            }
+        }        
 
         public bool IsBoxSearchBarVisible
         {
@@ -68,39 +94,133 @@ namespace Montreal.Challenge.ViewModels
         public NowPlayingPageViewModel(INavigationService navigationService)
         : base(navigationService)
         {
+            //set navigation
+            _navigationService = navigationService;
+
             //set title
             Title = "Now Playing Movies";
 
             //binding delegates
             BindingDelegateCommands();
 
-            var movie = new Movie() { BackdropPath = "https://image.tmdb.org/t/p/w600_and_h900_bestv2/AtsgWhDnHTq68L0lLsUrCnM7TjG.jpg", Title = "Capita Marvel", ReleaseDate = DateTime.Now };
-
-            var listmovies = new List<Movie>();
-            listmovies.Add(movie);
-
-            MoviesNowList = new ObservableCollection<Movie>(listmovies);
+            //load movies
+            LoadNowPlayingMovies();
         }
 
         #endregion
 
         #region Delegate Commands
 
+        public DelegateCommand ImageSearchBarCommand { get; set; }
         public DelegateCommand SearchBarCommand { get; set; }
-
         #endregion
 
         #region Methods
 
-        private void BindingDelegateCommands()
+        protected override void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            //products button action
-            SearchBarCommand = new DelegateCommand(ExecuteSearch);
+            base.OnPropertyChanged(propertyName);
+
+            if (propertyName.Equals(nameof(SelectedItem)))
+            {
+                OnSelectedItem();
+            }
         }
 
-        private void ExecuteSearch()
+        private void OnSelectedItem()
         {
-            var x = SearchText;
+            if (SelectedItem != null)
+            {
+                //declare parameters
+                var navigationParams = new NavigationParameters();
+
+                //add parameter
+                navigationParams.Add("movieItemSelected", SelectedItem);
+
+                //redirect
+                _navigationService.NavigateAsync("DetailsPage", navigationParams);
+            }
+        }
+
+        private async void LoadNowPlayingMovies()
+        {
+            using (var loading = UserDialogs.Instance.Loading("Loading...", null, null, true, MaskType.Gradient))
+            {
+                //request api
+                var moviesApiCore = Injector.Resolver<IMoviesApiCore>();
+
+                //perfomr request
+                var moviesList = await moviesApiCore.GetNowPlayingMovies("pt-br", 1);
+
+                //add in observable list
+                if (moviesList?.Count > 0)
+                {
+                    //append items
+                    AppendMovieItems(moviesList);
+                }
+            }           
+        }
+
+        private void AppendMovieItems(List<MovieEntity> movies)
+        {
+            foreach (MovieEntity movie in movies)
+                _listmovies.Add(new MovieItem(movie));
+
+            MoviesNowList = new ObservableCollection<MovieItem>(_listmovies);
+        }
+      
+        private void BindingDelegateCommands()
+        {
+            ImageSearchBarCommand = new DelegateCommand(ExecuteImageSearchBar);
+            SearchBarCommand = new DelegateCommand(ExecuteSearchBar);
+        }
+
+        private void ExecuteImageSearchBar()
+        {
+            //show search bar
+            IsBoxSearchBarVisible = IsSearchBarVisible = !IsSearchBarVisible;
+
+            //reset search
+            SearchText = string.Empty;
+        }
+
+        private async void ExecuteSearchBar()
+        {
+            using (var searching = UserDialogs.Instance.Loading("Searching...", null, null, true, MaskType.Gradient))
+            {
+                if (!string.IsNullOrEmpty(SearchText) && SearchText.Length >= 5)
+                {
+                    //request api
+                    var moviesApiCore = Injector.Resolver<IMoviesApiCore>();
+
+                    //perfomr request
+                    var moviesList = await moviesApiCore.GetSearchedMovies(SearchText, "pt-br", 1);
+
+                    //add in observable list
+                    if (moviesList?.Count > 0)
+                    {
+                        //clear lists
+                        ClearLists();
+
+                        //append items
+                        AppendMovieItems(moviesList);
+                    }
+
+                    //hide and clear search
+                    ExecuteImageSearchBar();
+                }
+                else
+                {
+                    //show message
+                    UserDialogs.Instance.Alert("O termo informado deve ter 5 caracteres ou mais !", "Pesquisa");
+                }
+            }
+        }
+
+        private void ClearLists()
+        {
+            _listmovies.Clear();
+            MoviesNowList.Clear();
         }
 
 

@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Mtr:BaseView xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Montreal.Challenge.Views.DetailsPage"
+             xmlns:Mtr="clr-namespace:Montreal.Challenge.Views.Base"
+             xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+             xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             BackgroundColor="Black">
+    <ContentPage.Content>
+        <RelativeLayout>
+          
+            <ffimageloading:CachedImage 
+                Aspect="AspectFill"
+                Opacity=".2"
+                RelativeLayout.XConstraint="{ConstraintExpression Type=Constant, Constant=0}"
+                RelativeLayout.YConstraint="{ConstraintExpression Type=Constant, Constant=0}"
+                RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=0}"
+                RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1, Constant=0}"
+                DownsampleToViewSize="false"
+                Source="{Binding MovieDetailItem.Movie.PosterPath}">
+            </ffimageloading:CachedImage>
+
+            <Label
+                x:Name="overView"
+                FontSize="Medium"
+                RelativeLayout.XConstraint="{ConstraintExpression Type=Constant, Constant=20}"
+                RelativeLayout.YConstraint="{ConstraintExpression Type=Constant, Constant=20}"
+                RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=-40}"
+                TextColor="White"
+                Text="{Binding MovieDetailItem.Movie.OverView}"
+                />
+
+            <Label
+                x:Name="title"
+                FontAttributes="Bold"
+                FontSize="Large"
+                FontFamily="Roboto"
+                LineBreakMode="WordWrap"
+                VerticalTextAlignment="End"
+                RelativeLayout.XConstraint="{ConstraintExpression Type=Constant, Constant=20}"
+                RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1, Constant=-150}"
+                RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=-40}"
+                RelativeLayout.HeightConstraint="{ConstraintExpression Type=Constant, Constant=60}"
+                TextColor="White"
+                Text="{Binding MovieDetailItem.Movie.Title}"
+                />
+
+            <Label
+                x:Name="genres"
+                FontSize="Medium"
+                FontFamily="Roboto"
+                RelativeLayout.XConstraint="{ConstraintExpression Type=Constant, Constant=20}"
+                RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1, Constant=-70}"
+                RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=-40}"
+                TextColor="White"
+                Text="{Binding MovieDetailItem.Movie.GenreIds}"
+                />
+
+            <Label
+                x:Name="releaseDate"
+                FontSize="Medium"
+                FontFamily="Roboto"
+                RelativeLayout.XConstraint="{ConstraintExpression Type=Constant, Constant=20}"
+                RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1, Constant=-30}"
+                RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=-40}"
+                TextColor="White"
+                Text="{Binding MovieDetailItem.ReleaseDate}"
+                />
+
+        </RelativeLayout>
+    </ContentPage.Content>
+</Mtr:BaseView>

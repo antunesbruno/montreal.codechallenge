@@ -9,24 +9,18 @@ namespace Montreal.Challenge.Datasource.Repository
     public static class PlatformDatabase
     {
         #region Fields        
-
-        private static string _absolutePath;
+    
         private static string _databaseFolder;
-        private static string _databaseName;
-
-
+     
         #endregion
 
-        #region Properties        
+        #region Properties      
 
-        //absolute path setted by OS
-        public static string AbsolutePathOS { get { return _absolutePath; } }
-
-        //database path (Production: Environment.GetFolderPath(Environment.SpecialFolder.Personal)
-        public static string DatabasePath { get { return AbsolutePathOS + "/" + _databaseFolder; } }
+        //database path
+        public static string DatabasePath { get { return Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "/" + _databaseFolder; } }
 
         //database name
-        public static string DatabaseName { get { return _databaseName; } }
+        public static string DatabaseName { get; private set; }
 
         //sqlite connection
         public static SQLiteAsyncConnection SQLiteConnection { get; private set; }
@@ -38,11 +32,10 @@ namespace Montreal.Challenge.Datasource.Repository
         /// <summary>
         /// Create database by path
         /// </summary>
-        public static void CreateDatabase(string absolutePath = null, string databaseFolder = null, string databaseName = null)
+        public static void CreateDatabase(string databaseFolder, string databaseName)
         {
-            _absolutePath = absolutePath;
             _databaseFolder = databaseFolder;
-            _databaseName = databaseName;
+            DatabaseName = databaseName;
 
             if (!string.IsNullOrEmpty(databaseFolder) && !string.IsNullOrEmpty(databaseName))
             {

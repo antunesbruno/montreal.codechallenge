@@ -4,6 +4,8 @@
              x:Class="Montreal.Challenge.Views.NowPlayingPage"            
              xmlns:Mtr="clr-namespace:Montreal.Challenge.Views.Base"
              xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+             xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             prism:ViewModelLocator.AutowireViewModel="True"
              BackgroundColor="Black">
     <ContentPage.Content>
 
@@ -16,7 +18,8 @@
                 RelativeLayout.YConstraint="{ConstraintExpression Type=Constant, Constant=0}"
                 RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=0}"
                 RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1, Constant=0}"
-                ItemsSource="{Binding MoviesNowList}">
+                ItemsSource="{Binding MoviesNowList}"
+                SelectedItem="{Binding SelectedItem}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
@@ -34,10 +37,10 @@
                                        RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=0}"
                                        RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1, Constant=0}"
                                        DownsampleToViewSize="false"
-                                       Source="{Binding BackdropPath}">
+                                       Source="{Binding Movie.BackdropPath}">
                                 </ffimageloading:CachedImage>
 
-                                <Label Text="{Binding Title}"
+                                <Label Text="{Binding Movie.Title}"
                                        FontAttributes="Bold"
                                        FontSize="Medium"
                                        FontFamily="Roboto"
@@ -68,10 +71,13 @@
                      RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=0}"
                      />
 
-            <SearchBar x:Name="searchBar" TextColor="#C62828" HeightRequest="50" IsVisible="{Binding IsSearchBarVisible}" Text="{Binding SearchText}"                     
+            <SearchBar x:Name="searchBar" TextColor="#C62828" HeightRequest="50" IsVisible="{Binding IsSearchBarVisible}" 
+                       Text="{Binding SearchText}"                     
+                       SearchCommand="{Binding SearchBarCommand}"
                        RelativeLayout.XConstraint="{ConstraintExpression Type=Constant, Constant=0}"
                        RelativeLayout.YConstraint="{ConstraintExpression Type=Constant, Constant=0}"
                        RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=0}">
+              
             </SearchBar>
 
             <Image x:Name="search"
@@ -81,7 +87,7 @@
                 RelativeLayout.WidthConstraint="{ConstraintExpression Type=Constant, Constant=65}"
                 RelativeLayout.HeightConstraint="{ConstraintExpression Type=Constant, Constant=65}" >
                 <Image.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding SearchBarCommand}"/>
+                    <TapGestureRecognizer Command="{Binding ImageSearchBarCommand}"/>
                 </Image.GestureRecognizers>
             </Image>
 

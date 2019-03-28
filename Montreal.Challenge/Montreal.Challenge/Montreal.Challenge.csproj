@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Acr.UserDialogs" Version="7.0.4" />
     <PackageReference Include="Xamarin.FFImageLoading" Version="2.2.25" />
     <PackageReference Include="Xamarin.FFImageLoading.Forms" Version="2.2.25" />
     <PackageReference Include="Xamarin.FFImageLoading.Transformations" Version="2.2.25" />
@@ -14,12 +15,14 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Montreal.Challenge.Core\Montreal.Challenge.Core.csproj" />
-    <ProjectReference Include="..\..\Montreal.Challenge.Datasource\Montreal.Challenge.Datasource.csproj" />
     <ProjectReference Include="..\..\Montreal.Challenge.Ioc\Montreal.Challenge.Ioc.csproj" />
     <ProjectReference Include="..\..\Montreal.Challenge.Shared\Montreal.Challenge.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Update="Views\DetailsPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
     <EmbeddedResource Update="Views\NowPlayingPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
